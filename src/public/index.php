@@ -1,9 +1,10 @@
 <?php
+
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
 require '../vendor/autoload.php';
-  
+
 $configuration = [
     'settings' => [
         'displayErrorDetails' => true,
@@ -22,7 +23,7 @@ $app->get('/new-report', function (Request $request, Response $response, array $
     ]);
 
     if ($client->validateCredentials()) {
-        $report = (int) $client->RequestReport('_GET_MERCHANT_LISTINGS_ALL_DATA_');
+        $report = (int)$client->RequestReport('_GET_MERCHANT_LISTINGS_ALL_DATA_');
     } else {
         $report = false;
     }
@@ -31,9 +32,12 @@ $app->get('/new-report', function (Request $request, Response $response, array $
     return $response;
 });
 
-$app->get('/test', function($req, $res){ echo __DIR__; return $res;});
+$app->get('/test', function ($req, $res) {
+    echo __DIR__;
+    return $res;
+});
 
-$app->post('/update-quantities', function(Request $request, Response $response) {
+$app->post('/update-quantities', function (Request $request, Response $response) {
     $parsedBody = $request->getParsedBody();
     $reportId = $parsedBody['reportId'];
     $crawlerItems = $parsedBody['items'];
@@ -62,9 +66,9 @@ $app->post('/update-quantities', function(Request $request, Response $response) 
 
             $productsToUpdate = [];
             foreach ($report as $itemInAmazon) {
-		if ($newItemsArray[$itemInAmazon['seller-sku']] &&  $newItemsArray[$itemInAmazon['seller-sku']]['send_to_amazon'] == 0) {
-		    continue;
-		}
+                if ($newItemsArray[$itemInAmazon['seller-sku']] && $newItemsArray[$itemInAmazon['seller-sku']]['send_to_amazon'] == 0) {
+                    continue;
+                }
                 if ($itemInAmazon['quantity'] < 12 && $newItemsArray[$itemInAmazon['seller-sku']] && $newItemsArray[$itemInAmazon['seller-sku']]['quantity'] == 5) {
                     $productsToUpdate[$itemInAmazon['seller-sku']] = 12;
                 } else if ($itemInAmazon['quantity'] > 0 && $newItemsArray[$itemInAmazon['seller-sku']] && $newItemsArray[$itemInAmazon['seller-sku']]['quantity'] == 0) {
@@ -80,7 +84,8 @@ $app->post('/update-quantities', function(Request $request, Response $response) 
             return $response;
         }
 
-    } catch (Exception $e) {}
+    } catch (Exception $e) {
+    }
     echo 'false';
     return $response;
 });
