@@ -3,15 +3,28 @@ use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
 require '../vendor/autoload.php';
-
-$app = new \Slim\App;
+  
+$configuration = [
+    'settings' => [
+        'displayErrorDetails' => true,
+    ],
+];
+$c = new \Slim\Container($configuration);
+$app = new \Slim\App($c);
+//app = new \Slim\App;
 $app->get('/new-report', function (Request $request, Response $response, array $args) {
+//echo 1; return $response;
+//    $client = new \MCS\MWSClient([
+//        'Marketplace_Id' => '',
+//        'Seller_Id' => '',
+//        'Access_Key_ID' => '',
+    //    'Secret_Access_Key' => '',
     $client = new \MCS\MWSClient([
-        'Marketplace_Id' => '',
-        'Seller_Id' => '',
-        'Access_Key_ID' => '',
-        'Secret_Access_Key' => '',
-        'MWSAuthToken' => '' // Optional. Only use this key if you are a third party user/developer
+        'Marketplace_Id' => 'ATVPDKIKX0DER',
+        'Seller_Id' => 'A61G3C2W760IY',
+        'Access_Key_ID' => 'AKIAICYVBSJT74OWYIPA',
+        'Secret_Access_Key' => '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',
+        'MWSAuthToken' => 'amzn.mws.94ae1344-b97d-649c-da1d-2049abfb9292' // Optional. Only use this key if you are a third party user/developer
     ]);
 
     if ($client->validateCredentials()) {
@@ -24,20 +37,28 @@ $app->get('/new-report', function (Request $request, Response $response, array $
     return $response;
 });
 
+$app->get('/test', function($req, $res){ echo __DIR__; return $res;});
+
 $app->post('/update-quantities', function(Request $request, Response $response) {
     $parsedBody = $request->getParsedBody();
     $reportId = $parsedBody['reportId'];
     $crawlerItems = $parsedBody['items'];
 
     try {
-        $client = new \MCS\MWSClient([
-            'Marketplace_Id' => '',
-            'Seller_Id' => '',
-            'Access_Key_ID' => '',
-            'Secret_Access_Key' => '',
-            'MWSAuthToken' => '' // Optional. Only use this key if you are a third party user/developer
-        ]);
-
+   //     $client = new \MCS\MWSClient([
+   //         'Marketplace_Id' => '',
+   //         'Seller_Id' => '',
+   //         'Access_Key_ID' => '',
+   //         'Secret_Access_Key' => '',
+   //         'MWSAuthToken' => '' // Optional. Only use this key if you are a third party user/developer
+   //     ]);
+$client = new \MCS\MWSClient([
+    'Marketplace_Id' => 'ATVPDKIKX0DER',
+    'Seller_Id' => 'A61G3C2W760IY',
+    'Access_Key_ID' => 'AKIAICYVBSJT74OWYIPA',
+    'Secret_Access_Key' => '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',
+    'MWSAuthToken' => 'amzn.mws.94ae1344-b97d-649c-da1d-2049abfb9292' // Optional. Only use this key if you are a third party user/developer
+]);
         if ($client->validateCredentials()) {
             $report = $client->GetReport($reportId);
 
@@ -54,8 +75,11 @@ $app->post('/update-quantities', function(Request $request, Response $response) 
 
             $productsToUpdate = [];
             foreach ($report as $itemInAmazon) {
-                if ($itemInAmazon['quantity'] < 10 && $newItemsArray[$itemInAmazon['seller-sku']] && $newItemsArray[$itemInAmazon['seller-sku']]['quantity'] == 5) {
-                    $productsToUpdate[$itemInAmazon['seller-sku']] = 10;
+		if ($newItemsArray[$itemInAmazon['seller-sku']] &&  $newItemsArray[$itemInAmazon['seller-sku']]['send_to_amazon'] == 0) {
+		    continue;
+		}
+                if ($itemInAmazon['quantity'] < 12 && $newItemsArray[$itemInAmazon['seller-sku']] && $newItemsArray[$itemInAmazon['seller-sku']]['quantity'] == 5) {
+                    $productsToUpdate[$itemInAmazon['seller-sku']] = 12;
                 } else if ($itemInAmazon['quantity'] > 0 && $newItemsArray[$itemInAmazon['seller-sku']] && $newItemsArray[$itemInAmazon['seller-sku']]['quantity'] == 0) {
                     $productsToUpdate[$itemInAmazon['seller-sku']] = 0;
                 }
