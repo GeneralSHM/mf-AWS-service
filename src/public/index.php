@@ -11,20 +11,14 @@ $configuration = [
 ];
 $c = new \Slim\Container($configuration);
 $app = new \Slim\App($c);
-//app = new \Slim\App;
+
 $app->get('/new-report', function (Request $request, Response $response, array $args) {
-//echo 1; return $response;
-//    $client = new \MCS\MWSClient([
-//        'Marketplace_Id' => '',
-//        'Seller_Id' => '',
-//        'Access_Key_ID' => '',
-    //    'Secret_Access_Key' => '',
     $client = new \MCS\MWSClient([
-        'Marketplace_Id' => 'ATVPDKIKX0DER',
-        'Seller_Id' => 'A61G3C2W760IY',
-        'Access_Key_ID' => 'AKIAICYVBSJT74OWYIPA',
-        'Secret_Access_Key' => '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',
-        'MWSAuthToken' => 'amzn.mws.94ae1344-b97d-649c-da1d-2049abfb9292' // Optional. Only use this key if you are a third party user/developer
+        'Marketplace_Id' => '',
+        'Seller_Id' => '',
+        'Access_Key_ID' => '',
+        'Secret_Access_Key' => '',
+        'MWSAuthToken' => '' // Optional. Only use this key if you are a third party user/developer
     ]);
 
     if ($client->validateCredentials()) {
@@ -45,20 +39,13 @@ $app->post('/update-quantities', function(Request $request, Response $response) 
     $crawlerItems = $parsedBody['items'];
 
     try {
-   //     $client = new \MCS\MWSClient([
-   //         'Marketplace_Id' => '',
-   //         'Seller_Id' => '',
-   //         'Access_Key_ID' => '',
-   //         'Secret_Access_Key' => '',
-   //         'MWSAuthToken' => '' // Optional. Only use this key if you are a third party user/developer
-   //     ]);
-$client = new \MCS\MWSClient([
-    'Marketplace_Id' => 'ATVPDKIKX0DER',
-    'Seller_Id' => 'A61G3C2W760IY',
-    'Access_Key_ID' => 'AKIAICYVBSJT74OWYIPA',
-    'Secret_Access_Key' => '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',
-    'MWSAuthToken' => 'amzn.mws.94ae1344-b97d-649c-da1d-2049abfb9292' // Optional. Only use this key if you are a third party user/developer
-]);
+        $client = new \MCS\MWSClient([
+            'Marketplace_Id' => '',
+            'Seller_Id' => '',
+            'Access_Key_ID' => '',
+            'Secret_Access_Key' => '',
+            'MWSAuthToken' => '' // Optional. Only use this key if you are a third party user/developer
+        ]);
         if ($client->validateCredentials()) {
             $report = $client->GetReport($reportId);
 
